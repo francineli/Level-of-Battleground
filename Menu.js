@@ -2,14 +2,15 @@ boil.Menu = function(){};
 
 boil.Menu.prototype = {
     preload: function(){
-
+        game.load.image('button', 'Assets/Sprites/Button.png')
     },
     create: function(){
         console.log('You are in the Menu state');
         game.stage.backgroundColor = '#FF0000';
-        game.input.onDown.add(function(){
-            changeState('Play');
-        }); 
+        var button = game.add.button(750,500, 'button', function(){
+           game.state.start('Play') 
+        });
+        button.anchor.setTo(0.5);
     },
     update: function(){
         
