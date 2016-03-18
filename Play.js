@@ -55,7 +55,10 @@ boil.Play.prototype = {
         }
         else{
             controller.animations.stop('walk');
-            controller.frame = 0;
+            controller.frame = 0;   
+        }
+        if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
+            controller.body.velocity.y = -60;
         }
     }
 }
