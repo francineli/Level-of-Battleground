@@ -1,12 +1,13 @@
 boil.Play = function(){};
 
 
-var pinky, meow;
+var pinky = {}, meow = {};
 var haruki;
 var kagura;
 var speed = 10;
 var controller, pet = {x: 0};
 var bee, beeSpeed = 1;
+var target;
 
 
 boil.Play.prototype = {
@@ -35,6 +36,7 @@ boil.Play.prototype = {
         bee.scale.setTo(0.22);
         bee.animations.add('fly', [0,1,2,3]);
         bee.animations.play('fly', 12, true);
+        game.add.tween(bee).to({y: '+50'}, 1000, 'Linear', true, 0, 2000, true);
         
         
         haruki=game.add.sprite(130, 90, 'haruki');
@@ -53,17 +55,20 @@ boil.Play.prototype = {
         kagura.body.collideWorldBounds = true; 
         
         controller = haruki;
+        target = controller;
     },
     update: function(){
-        game.physics.arcade.overlap(controller, bee, function(){console.log('hit');});
-        if(Math.abs(bee.x - controller.x) < 5) {
+        game.physics.arcade.overlap(target, bee, function(){console.log('hit');});
+        
+        if(Math.abs(bee.x - target.x) < 5) {
             //nothing
         }
-        else if(bee.x > controller.x) {
+        else if(bee.x > target.x) {
             bee.x -= beeSpeed;
-        } else if(bee.x< controller.x) {
+        } else if(bee.x< target.x) {
             bee.x += beeSpeed;
         }
+        
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
             controller.x-=speed;
             controller.animations.play('walk', 12, true);
@@ -96,6 +101,10 @@ boil.Play.prototype = {
 }
          
 function addPinky(){
+    if('alive' in pinky && pinky.alive) {
+        target = controller;
+        return pinky.destroy();
+    }
     pinky=game.add.sprite(100, 100, 'pinky');
     pinky.scale.setTo(0.7)
     pinky.animations.add('petWalk', [0,1,2,3]);
@@ -104,9 +113,14 @@ function addPinky(){
     pinky.body.gravity.y=100
     pinky.body.collideWorldBounds = true;
     pet=pinky;
+    target=pet;
 }
 
 function addMeow(){
+    if('alive' in meow && meow.alive){
+        target = controller;
+        return meow.destroy();
+    }
     meow=game.add.sprite(90, 200, 'meow');
     meow.scale.setTo(0.7)
     meow.animations.add('petWalk', [0,1,2]);
@@ -115,6 +129,7 @@ function addMeow(){
     meow.body.gravity.y=100
     meow.body.collideWorldBounds = true; 
     pet=meow;
+    target=pet;
 }
 
 function changeController(){
@@ -125,6 +140,7 @@ function changeController(){
     else{
         controller = haruki;
     }
+    target = controller;
 } 
 
 function changePet(){
